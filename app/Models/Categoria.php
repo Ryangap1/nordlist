@@ -16,5 +16,6 @@ class Categoria extends Model
     public function caracteristicas(){
         return $this->belongsTo(Caracteristicas::class);
     }
-    //
+    
+    protected $fillable = ['caracteristica_id'];
 }

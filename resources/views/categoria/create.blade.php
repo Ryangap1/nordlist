@@ -5,7 +5,7 @@
 @push('css')
     <style>
 
-        #Descripcion{
+        #descripcion{
             resize: none;
         }
     </style>
@@ -27,15 +27,15 @@
             <div class="row g-3">
                 <div class="col-md-6">
                     <label for="nombre" class="form-label">Nombre:</label>
-                    <input type="text" name="Nombre" id="Nombre" class="form-control">
+                    <input type="text" name="nombre" id="nombre" class="form-control" value="{{old('nombre')}}">
                     @error('nombre')
-                        <small class="text-danger">{{'*'.$message."*"}}</small>
+                        <small class="text-danger">{{"*".$message."*"}}</small>
                     @enderror
                 </div>
 
                 <div class="col-md-12">
                     <label for="descripcion" class="form-label">Descripcion</label>
-                    <textarea name="Descripcion" id="Descripcion" rows="3" class="form-control">{{old('descripcion')}}</textarea>
+                    <textarea name="descripcion" id="descripcion" rows="3" class="form-control">{{old('Descripcion')}}</textarea>
                     @error('descripcion')
                         <small class="text-danger">{{'*'.$message."*"}}</small>
                     @enderror

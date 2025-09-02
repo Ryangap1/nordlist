@@ -20,5 +20,6 @@ class Caracteristicas extends Model
     public function presentaciones(){
         return $this->hasOne(Presentaciones::class);
     }
-    //
+    
+    protected $fillable = ['nombre','descripcion'];
 }

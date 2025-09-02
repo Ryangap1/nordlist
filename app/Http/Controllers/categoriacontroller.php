@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\storecategoriarequest;
+use App\Models\Caracteristicas;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class categoriacontroller extends Controller
 {
@@ -29,6 +32,14 @@ class categoriacontroller extends Controller
     public function store(storecategoriarequest $request)
     {
         dd($request);
+        try{
+            DB::beingtransaction();
+            $caracteristica = Caracteristicas::create($request->validated());
+            DB::commit();
+        }catch(Exception $e){
+            DB::rollBack();
+        }
+        
     }
 
     /**
