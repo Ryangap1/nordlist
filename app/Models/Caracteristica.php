@@ -9,7 +9,7 @@ class Caracteristica extends Model
 {
     use HasFactory;
 
-    public function categorias(){
+    public function categoria(){
         return $this->hasOne(Categoria::class);
     }
 
@@ -17,7 +17,7 @@ class Caracteristica extends Model
         return $this->hasOne(Marca::class);
     }
 
-    public function presentaciones(){
+    public function presentacione(){
         return $this->hasOne(Presentacione::class);
     }
     

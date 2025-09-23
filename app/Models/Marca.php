@@ -13,7 +13,7 @@ class Marca extends Model
         return $this->hasMany(Producto::class);
     }
 
-    public function caracteristicas(){
+    public function caracteristica(){
         return $this->belongsTo(Caracteristica::class);
     }
 }
