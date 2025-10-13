@@ -1,11 +1,11 @@
 @extends('template')
 
-@section('title', 'categorias')
+@section('title','Marcas')
 
 @push('css')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 @endpush
-
+    
 @push('CSS')
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" type="text/css">
 @endpush
@@ -34,21 +34,25 @@
         });
 </script>
 @endif
+    
+    <div class="container-fluid px-4">
+        <h1 class="mt-4 text-center">Marcas</h1>
+        <ol class="breadcrumb mb-4">
+            <li class="breadcrumb-item active"><a href="{{route ('panel')}}">Inicio</a></li>
+            <li class="breadcrumb-item active">Marcas</li>
+        </ol>
 
-<div class="container-fluid px-4">
-    <h1 class="mt-4 text-center">Categorías</h1>
-    <ol class="breadcrumb mb-4">
-        <li class="breadcrumb-item active"><a href="{{route ('panel')}}">Inicio</a></li>
-        <li class="breadcrumb-item active">Categorías</li>
-    </ol>
-
-    <div class="mb-4">
-        <a href="{{route('categorias.create')}}"><button type="button" class="btn btn-primary">Añadir nuevo registro</button></a>
+        <div class="mb-4">
+            <a href="{{route('marcas.create')}}">
+                <button type="button" class="btn btn-primary">Añadir nuevo registro</button>
+            </a>
+        </div>
     </div>
+
     <div class="card mb-4">
         <div class="card-header">
             <i class="fas fa-table me-1"></i>
-            Tabla categorias
+            Tabla marcas
         </div>
         <div class="card-body">
             <table id="datatablesSimple" class="table table-striped">
@@ -60,18 +64,17 @@
                         <th>Acciones</th>
                     </tr>
                 </thead>
-                
                 <tbody>
-                    @foreach ($categorias as $categoria)
+                    @foreach ($marcas as $marca)
                         <tr>
                             <td>
-                                {{$categoria->caracteristica->nombre}}
+                                {{$marca->caracteristica->nombre}}
                             </td>
                             <td>
-                                {{$categoria->caracteristica->descripcion}}
+                                {{$marca->caracteristica->descripcion}}
                             </td>
                             <td>
-                                @if ($categoria->caracteristica->estado == 1)
+                                @if ($marca->caracteristica->estado == 1)
                                 <span class="fw-bolder p-1 rounded bg-success text-white">Activo</span>
                                     
                                 @else
@@ -83,14 +86,14 @@
                             <td>
                                 <div class="btn-group" role="group" aria-label="Basic mixed styles example">
 
-                                    <form action="{{route('categorias.edit',['categoria'=>$categoria])}}" method="GET">
+                                    <form action="{{route('marcas.edit',['marca'=>$marca])}}" method="GET">
                                         <button type="submit" class="btn btn-warning">Editar</button>
                                     </form>
-                                    @if ($categoria->caracteristica->estado == 1)
-                                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmModal-{{$categoria->id}}">Eliminar</button>
+                                    @if ($marca->caracteristica->estado == 1)
+                                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmModal-{{$marca->id}}">Eliminar</button>
 
                                     @else
-                                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#confirmModal-{{$categoria->id}}">Restaurar</button>
+                                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#confirmModal-{{$marca->id}}">Restaurar</button>
                                     @endif
                                     
                                     
@@ -99,7 +102,7 @@
                         </tr>
 
                         <!-- Modal -->
-                        <div class="modal fade" id="confirmModal-{{$categoria->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal fade" id="confirmModal-{{$marca->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -107,13 +110,13 @@
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        {{$categoria->caracteristica->estado == 1 ? '¿Estás seguro de que quieres eliminar esta categoria?' : '¿Estás seguro de que quieres restaurar esta categoria?'}}
+                                        {{$marca->caracteristica->estado == 1 ? '¿Estás seguro de que quieres eliminar esta marca?' : '¿Estás seguro de que quieres restaurar esta marca?'}} 
                                     </div>
                                     <div class="modal-footer">
                                         
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
 
-                                        <form action="{{route('categorias.destroy',['categoria'=>$categoria->id])}}" method="POST">
+                                        <form action="{{route('marcas.destroy',['marca'=>$marca->id])}}" method="POST">
 
                                             @method('DELETE')
                                             @csrf
@@ -130,7 +133,6 @@
             </table>
         </div>
     </div>
-</div>
 
 @endsection
 
