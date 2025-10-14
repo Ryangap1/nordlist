@@ -27,16 +27,16 @@ class Producto extends Model
     }
 
     public function presentacion(){
-        return $this->belongsTo(Presentacione::class);
+        return $this->belongsTo(Presentacion::class);
     }
 
-    protected $fillable = ['codigo','nombre','descripcion','fecha_vencimiento','marca_id','presentaciones_id','img_path'];
+    protected $fillable = ['codigo','nombre','descripcion','fecha_vencimiento','marca_id','presentacion_id','img_path'];
 
     public function handleUploadImage($image){
         $file = $image;
         $name = time() . $file->getclientoriginalname();
         //$file->move(public_path().'/img/productos/',$name);
-        Storage::putFileAs('/public/productos/',$file,$name,'public');
+        Storage::putFileAs('productos',$file,$name,'public');
 
         return $name;
     }

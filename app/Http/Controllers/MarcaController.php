@@ -48,7 +48,7 @@ class MarcaController
             DB::rollBack();
         }
 
-        return redirect()->route('marcas.index')->with('success','marca registrada');
+        return redirect()->route('marcas.index')->with('success','Marca registrada');
     }
 
     /**

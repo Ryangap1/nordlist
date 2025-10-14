@@ -22,7 +22,7 @@ class StorePresentacionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nombre' => 'required|max:60|unique:caracteristicas,nombre',
+            'nombre' => 'required|max:60',
             'descripcion' => 'nullable|max:255'
         ];
     }

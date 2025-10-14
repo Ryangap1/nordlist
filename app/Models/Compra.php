@@ -9,8 +9,8 @@ class Compra extends Model
 {
     use HasFactory;
 
-    public function proveedore(){
-        return $this->belongsTo(Proveedore::class);
+    public function proveedor(){
+        return $this->belongsTo(Proveedor::class);
     }
 
     public function comprobante(){

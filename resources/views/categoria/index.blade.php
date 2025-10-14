@@ -45,10 +45,11 @@
     <div class="mb-4">
         <a href="{{route('categorias.create')}}"><button type="button" class="btn btn-primary">Añadir nuevo registro</button></a>
     </div>
+    
     <div class="card mb-4">
         <div class="card-header">
             <i class="fas fa-table me-1"></i>
-            Tabla categorias
+            Tabla de categorias
         </div>
         <div class="card-body">
             <table id="datatablesSimple" class="table table-striped">

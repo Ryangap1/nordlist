@@ -19,7 +19,7 @@
             <li class="breadcrumb-item active">Editar presentaciones</li>
         </ol>
         <div class="container w-100 border border-3 border-primary rounded p-4 mt-3">
-            <form action="{{route('presentaciones.update',['presentacione' => $presentacion])}}" method="post">
+            <form action="{{route('presentaciones.update',['presentacion' => $presentacion])}}" method="post">
                 @method('PATCH')
                 @csrf
                 <div class="row g-3">

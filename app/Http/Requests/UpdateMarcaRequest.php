@@ -21,10 +21,10 @@ class UpdateMarcaRequest extends FormRequest
      */
     public function rules(): array
     {
-        $marca = $this->route('marca');
-        $caracteristicaId = $marca->caracteristica->id;
+        //$marca = $this->route('marca');
+        //$caracteristicaId = $marca->caracteristica->id;
         return [
-            'nombre' => 'required|max:60|unique:caracteristicas,nombre,'.$caracteristicaId,
+            'nombre' => 'required|max:60',
             'descripcion' => 'nullable|max:255'
         ];
     }

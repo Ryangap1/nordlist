@@ -5,12 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Presentacione extends Model
+class Presentacion extends Model
 {
     use HasFactory;
 
     public function productos(){
-        return $this->belongsToMany(Producto::class);
+        return $this->hasMany(Producto::class);
     }
 
     public function caracteristica(){
@@ -18,4 +18,6 @@ class Presentacione extends Model
     }
 
     protected $fillable = ['caracteristica_id'];
+
+    protected $table = 'presentaciones';
 }

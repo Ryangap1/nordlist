@@ -65,9 +65,18 @@
                         <!-------IMAGEN----->
                     <div class="col-md-6 mb-2">
                         <label for="img_path" class="form-label">Imágen:</label>
-                        <input type="file" name="img_path" id="img_path" class="form-control" accept="image/">
+
+                        <div class="mb-2">
+                            <img id="preview" src="{{ asset('storage/productos/default.png') }}" 
+                                alt="Vista previa" 
+                                width="120" 
+                                class="img-thumbnail d-none">
+                        </div>
+
+                        <input type="file" name="img_path" id="img_path" class="form-control" accept="image/*">
+                        
                         @error('img_path')
-                            <small class="text-danger">{{'*'.$message}}</small>
+                            <small class="text-danger">{{ '*'.$message }}</small>
                         @enderror
                     </div>
 
@@ -86,13 +95,13 @@
 
                     <!-------PRESENTACION----->
                     <div class="col-md-6 mb-2">
-                        <label for="presentaciones_id" class="form-label">Presentación:</label>
-                        <select data-size="5" title="Seleccione una presentación" data-live-search="true" name="presentaciones_id" id="presentaciones_id" class="form-control selectpicker show-tick">
+                        <label for="presentacion_id" class="form-label">Presentación:</label>
+                        <select data-size="5" title="Seleccione una presentación" data-live-search="true" name="presentacion_id" id="presentacion_id" class="form-control selectpicker show-tick">
                             @foreach ($presentaciones as $item)
-                                <option value="{{$item->id}}" {{old('presentaciones_id') == $item->id ? 'selected' : ''}}>{{$item->nombre}}</option>
+                                <option value="{{$item->id}}" {{old('presentacion_id') == $item->id ? 'selected' : ''}}>{{$item->nombre}}</option>
                             @endforeach
                         </select>
-                        @error('presentaciones_id')
+                        @error('presentacion_id')
                             <small class="text-danger">{{'*'.$message}}</small>
                         @enderror
                     </div>
@@ -122,4 +131,19 @@
 
 @push('js')
     <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/js/bootstrap-select.min.js"></script>
+
+    <script>
+    // Mostrar vista previa de imagen seleccionada
+    document.getElementById('img_path').addEventListener('change', function (e) {
+        const file = e.target.files[0];
+        const preview = document.getElementById('preview');
+        if (file) {
+            preview.src = URL.createObjectURL(file);
+            preview.classList.remove('d-none');
+        } else {
+            preview.classList.add('d-none');
+        }
+    });
+</script>
+
 @endpush

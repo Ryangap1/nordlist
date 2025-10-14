@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StorePresentacionRequest;
 use App\Http\Requests\UpdatePresentacionRequest;
 use App\Models\Caracteristica;
-use App\Models\Presentacione;
+use App\Models\Presentacion;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -17,7 +17,7 @@ class PresentacionController
      */
     public function index()
     {
-        $presentaciones = Presentacione::with('caracteristica')->latest()->get();
+        $presentaciones = Presentacion::with('caracteristica')->latest()->get();
 
         return view('presentacion.index',['presentaciones' => $presentaciones]);
     }
@@ -39,7 +39,7 @@ class PresentacionController
         try{
             DB::beginTransaction();
             $caracteristica = Caracteristica::create($request->validated());
-            $caracteristica->presentacione()->create([
+            $caracteristica->presentacion()->create([
                 'caracteristica_id' => $caracteristica->id
             ]);
             DB::commit();
@@ -47,7 +47,7 @@ class PresentacionController
             DB::rollBack();
         }
 
-        return redirect()->route('presentaciones.index')->with('success','presentación registrada');
+        return redirect()->route('presentaciones.index')->with('success','Presentación registrada');
 
     }
 
@@ -62,19 +62,19 @@ class PresentacionController
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Presentacione $presentacione)
+    public function edit(presentacion $presentacion)
     {
         //dd($presentacion);
 
-        return view('presentacion.edit',['presentacion'=>$presentacione]);
+        return view('presentacion.edit',['presentacion'=>$presentacion]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdatePresentacionRequest $request, Presentacione $presentacione)
+    public function update(UpdatePresentacionRequest $request, presentacion $presentacion)
     {
-        Caracteristica::where('id',$presentacione->caracteristica->id)
+        Caracteristica::where('id',$presentacion->caracteristica->id)
         ->update($request->validated());
 
         return redirect()->route('presentaciones.index')->with('success','Presentación actualizada');
@@ -89,20 +89,20 @@ class PresentacionController
 
         $message = '';
 
-        $presentacione = Presentacione::find($id);
+        $presentacion = Presentacion::find($id);
 
-        if($presentacione->caracteristica->estado == 1) {
-            Caracteristica::where('id',$presentacione->caracteristica->id)
+        if($presentacion->caracteristica->estado == 1) {
+            Caracteristica::where('id',$presentacion->caracteristica->id)
                 ->update([
                     'estado' => 0
                 ]);
-                $message = 'presentación eliminada';
+                $message = 'Presentación eliminada';
         } else {
-            Caracteristica::where('id',$presentacione->caracteristica->id)
+            Caracteristica::where('id',$presentacion->caracteristica->id)
                 ->update([
                     'estado' => 1
                 ]);
-                $message = 'presentación restaurada';
+                $message = 'Presentación restaurada';
         }
         
 

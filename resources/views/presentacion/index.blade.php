@@ -47,90 +47,90 @@
                 <button type="button" class="btn btn-primary">Añadir nuevo registro</button>
             </a>
         </div>
-    </div>
-
-    <div class="card mb-4">
-        <div class="card-header">
-            <i class="fas fa-table me-1"></i>
-            Tabla Presentaciones
-        </div>
-        <div class="card-body">
-            <table id="datatablesSimple" class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Descripción</th>
-                        <th>Estado</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($presentaciones as $presentacion)
+    
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="fas fa-table me-1"></i>
+                Tabla de presentaciones
+            </div>
+            <div class="card-body">
+                <table id="datatablesSimple" class="table table-striped">
+                    <thead>
                         <tr>
-                            <td>
-                                {{$presentacion->caracteristica->nombre}}
-                            </td>
-                            <td>
-                                {{$presentacion->caracteristica->descripcion}}
-                            </td>
-                            <td>
-                                @if ($presentacion->caracteristica->estado == 1)
-                                <span class="fw-bolder p-1 rounded bg-success text-white">Activo</span>
-                                    
-                                @else
-
-                                <span class="fw-bolder p-1 rounded bg-danger text-white">Eliminado</span>
-                                    
-                                @endif
-                            </td>
-                            <td>
-                                <div class="btn-group" role="group" aria-label="Basic mixed styles example">
-
-                                    <form action="{{route('presentaciones.edit',['presentacione'=>$presentacion])}}" method="GET">
-                                        <button type="submit" class="btn btn-warning">Editar</button>
-                                    </form>
-                                    @if ($presentacion->caracteristica->estado == 1)
-                                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmModal-{{$presentacion->id}}">Eliminar</button>
-
-                                    @else
-                                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#confirmModal-{{$presentacion->id}}">Restaurar</button>
-                                    @endif
-                                    
-                                    
-                                </div>
-                            </td>
+                            <th>Nombre</th>
+                            <th>Descripción</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
                         </tr>
-
-                        <!-- Modal -->
-                        <div class="modal fade" id="confirmModal-{{$presentacion->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h1 class="modal-title fs-5" id="exampleModalLabel">Mensaje de confirmación</h1>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        {{$presentacion->caracteristica->estado == 1 ? '¿Estás seguro de que quieres eliminar esta presentacion?' : '¿Estás seguro de que quieres restaurar esta presentacion?'}}
-                                    </div>
-                                    <div class="modal-footer">
+                    </thead>
+                    <tbody>
+                        @foreach ($presentaciones as $presentacion)
+                            <tr>
+                                <td>
+                                    {{$presentacion->caracteristica->nombre}}
+                                </td>
+                                <td>
+                                    {{$presentacion->caracteristica->descripcion}}
+                                </td>
+                                <td>
+                                    @if ($presentacion->caracteristica->estado == 1)
+                                    <span class="fw-bolder p-1 rounded bg-success text-white">Activo</span>
                                         
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                    @else
 
-                                        <form action="{{route('presentaciones.destroy',['presentacione'=>$presentacion->id])}}" method="POST">
+                                    <span class="fw-bolder p-1 rounded bg-danger text-white">Eliminado</span>
+                                        
+                                    @endif
+                                </td>
+                                <td>
+                                    <div class="btn-group" role="group" aria-label="Basic mixed styles example">
 
-                                            @method('DELETE')
-                                            @csrf
-                                            <button type="submit" class="btn btn-danger">Confirmar</button>
-
+                                        <form action="{{route('presentaciones.edit',['presentacion'=>$presentacion])}}" method="GET">
+                                            <button type="submit" class="btn btn-warning">Editar</button>
                                         </form>
+                                        @if ($presentacion->caracteristica->estado == 1)
+                                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmModal-{{$presentacion->id}}">Eliminar</button>
 
+                                        @else
+                                            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#confirmModal-{{$presentacion->id}}">Restaurar</button>
+                                        @endif
+                                        
+                                        
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Modal -->
+                            <div class="modal fade" id="confirmModal-{{$presentacion->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h1 class="modal-title fs-5" id="exampleModalLabel">Mensaje de confirmación</h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            {{$presentacion->caracteristica->estado == 1 ? '¿Estás seguro de que quieres eliminar esta presentacion?' : '¿Estás seguro de que quieres restaurar esta presentacion?'}}
+                                        </div>
+                                        <div class="modal-footer">
+                                            
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+
+                                            <form action="{{route('presentaciones.destroy',['presentacion'=>$presentacion->id])}}" method="POST">
+
+                                                @method('DELETE')
+                                                @csrf
+                                                <button type="submit" class="btn btn-danger">Confirmar</button>
+
+                                            </form>
+
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    @endforeach
-                </tbody>
-            </table>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
