@@ -2,7 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StorePersonaRequest;
+use App\Models\Cliente;
+use App\Models\Documento;
+use App\Models\Persona;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ClienteController
 {
@@ -11,7 +17,9 @@ class ClienteController
      */
     public function index()
     {
-        return view('cliente.index');
+        $clientes = Cliente::with('persona.documento')->get();
+        //dd($clientes);
+        return view('cliente.index', compact('clientes'));
     }
 
     /**
@@ -19,15 +27,29 @@ class ClienteController
      */
     public function create()
     {
-        //
+        $documentos = Documento::all();
+        return view('cliente.create', compact('documentos'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StorePersonaRequest $request)
     {
-        //
+        try{
+            DB::beginTransaction();
+            $persona = Persona::create($request->validated());
+            $persona->cliente()->create([
+                'persona_id' => $persona->id
+            ]);
+            DB::commit();
+        }catch(Exception $e){
+            DB::rollBack();
+
+            //dd($e->getMessage());
+        }
+
+        return redirect()->route('clientes.index')->with('success', 'Cliente registrado');
     }
 
     /**

@@ -53,7 +53,57 @@
         </div>
         <div class="card-body">
             <table id="datatablesSimple" class="table table-striped">
-                
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Dirección</th>
+                        <th>Documento</th>
+                        <th>Tipo de persona</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($clientes as $item)
+                        <tr>
+                            <td>
+                                {{$item->persona->razon_social}}
+                            </td>
+                            <td>
+                                {{$item->persona->direccion}}
+                            </td>
+                            <td>
+                                <p class="fw-normal mb-1">{{$item->persona->documento->tipo_documento}}</p>
+                                <p class="text-muted mb-0">{{$item->persona->numero_documento}}</p>
+                            </td>
+                            <td>
+                                {{$item->persona->tipo_persona}}
+                            </td>
+                            <td>
+                                @if ($item->persona->estado == 1)
+                                    <span class="fw-bolder p-1 rounded bg-success text-white">Activo</span>
+                                @else
+                                    <span class="fw-bolder p-1 rounded bg-danger text-white">Eliminado</span>
+                                @endif
+                            </td>
+                            <td>
+                                <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+
+                                    <form action="{{route('clientes.edit',['cliente'=>$item])}}" method="GET">
+                                        <button type="submit" class="btn btn-warning">Editar</button>
+                                    </form>
+                                    @if ($item->persona->estado == 1)
+                                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmModal-{{$item->id}}">Eliminar</button>
+
+                                    @else
+                                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#confirmModal-{{$item->id}}">Restaurar</button>
+                                    @endif
+
+                                </div>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
             </table>
         </div>
     </div>
