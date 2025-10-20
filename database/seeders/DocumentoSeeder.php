@@ -13,7 +13,7 @@ class DocumentoSeeder extends Seeder
      */
     public function run(): void
     {
-        Documento::insert([
+        $documentos = [
             [
                 'tipo_documento' => 'CC' //Cédula de Ciudadanía: CC.
             ],
@@ -34,7 +34,15 @@ class DocumentoSeeder extends Seeder
             ],
             [
                 'tipo_documento' => 'NUIP' //Número Único de Identificación Personal: NUIP
+            ],
+            [
+                'tipo_documento' => 'NIT' //Número de Identificación Tributaria: NIP
             ]
-        ]);
+        ];
+
+        foreach ($documentos as $doc) {
+            Documento::firstOrCreate(['tipo_documento' => $doc['tipo_documento']]);
+        }
+        
     }
 }

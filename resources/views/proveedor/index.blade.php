@@ -1,6 +1,6 @@
 @extends('template')
 
-@section('title', 'clientes')
+@section('title', 'proveedores')
 
 @push('css')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -36,20 +36,20 @@
 @endif
 
 <div class="container-fluid px-4">
-    <h1 class="mt-4 text-center">Clientes</h1>
+    <h1 class="mt-4 text-center">Proveedores</h1>
     <ol class="breadcrumb mb-4">
         <li class="breadcrumb-item active"><a href="{{route ('panel')}}">Inicio</a></li>
-        <li class="breadcrumb-item active">Clientes</li>
+        <li class="breadcrumb-item active">Proveedores</li>
     </ol>
 
     <div class="mb-4">
-        <a href="{{route('clientes.create')}}"><button type="button" class="btn btn-primary">Añadir nuevo registro</button></a>
+        <a href="{{route('proveedores.create')}}"><button type="button" class="btn btn-primary">Añadir nuevo registro</button></a>
     </div>
     
     <div class="card mb-4">
         <div class="card-header">
             <i class="fas fa-table me-1"></i>
-            Tabla de clientes
+            Tabla de proveedores
         </div>
         <div class="card-body">
             <table id="datatablesSimple" class="table table-striped">
@@ -64,7 +64,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($clientes as $item)
+                    @foreach ($proveedores as $item)
                         <tr>
                             <td>
                                 {{$item->persona->razon_social}}
@@ -89,7 +89,7 @@
                             <td>
                                 <div class="btn-group" role="group" aria-label="Basic mixed styles example">
 
-                                    <form action="{{route('clientes.edit',['cliente'=>$item])}}" method="GET">
+                                    <form action="{{route('proveedores.edit',['proveedor'=>$item])}}" method="GET">
                                         <button type="submit" class="btn btn-warning">Editar</button>
                                     </form>
                                     @if ($item->persona->estado == 1)
@@ -111,13 +111,13 @@
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        {{$item->persona->estado == 1 ? '¿Estás seguro de que quieres eliminar este cliente?' : '¿Estás seguro de que quieres restaurar este cliente?'}}
+                                        {{$item->persona->estado == 1 ? '¿Estás seguro de que quieres eliminar este proveedor?' : '¿Estás seguro de que quieres restaurar este proveedor?'}}
                                     </div>
                                     <div class="modal-footer">
                                         
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
 
-                                        <form action="{{route('clientes.destroy',['cliente'=>$item->persona->id])}}" method="POST">
+                                        <form action="{{route('proveedores.destroy',['proveedor'=>$item->persona->id])}}" method="POST">
 
                                             @method('DELETE')
                                             @csrf

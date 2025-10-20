@@ -1,6 +1,6 @@
 @extends('template')
 
-@section('title', 'Editar Clientes')
+@section('title', 'Editar Proveedores')
     
 @push('css')
 
@@ -9,33 +9,33 @@
 @section('content')
 
 <div class="container-fluid px-4">
-    <h1 class="mt-4 text-center">Editar Clientes</h1>
+    <h1 class="mt-4 text-center">Editar Proveedores</h1>
     <ol class="breadcrumb mb-4">
         <li class="breadcrumb-item"><a href="{{route ('panel')}}">Inicio</a></li>
-        <li class="breadcrumb-item"><a href="{{route('clientes.index')}}">Clientes</a></li>
-        <li class="breadcrumb-item active">Editar Clientes</li>
+        <li class="breadcrumb-item"><a href="{{route('proveedores.index')}}">Proveedores</a></li>
+        <li class="breadcrumb-item active">Editar Proveedores</li>
     </ol>
     <div class="container w-100 border border-3 border-primary rounded p-4 mt-3">
-        <form action="{{route('clientes.update',['cliente'=>$cliente])}}" method="post">
+        <form action="{{route('proveedores.update',['proveedor'=>$proveedor])}}" method="post">
             @method('PATCH')
             @csrf
             <div class="row g-3">
 
                 <!---TIPO DE PERSONA--->
                 <div class="col-md-6">
-                    <label for="tipo_persona" class="form-label">Tipo de cliente: <span class="fw-bold">{{ strtoupper($cliente->persona->tipo_persona)}}</span>
+                    <label for="tipo_persona" class="form-label">Tipo de proveedor: <span class="fw-bold">{{ strtoupper($proveedor->persona->tipo_persona)}}</span>
                     </label>
                 </div>
 
                 <!---RAZON SOCIAL-->
                 <div class="col-md-12 mb-2" id="box-razon-social">
-                    @if ($cliente->persona->tipo_persona == 'natural')
+                    @if ($proveedor->persona->tipo_persona == 'natural')
                         <label id="label-natural" for="razon_social" class="form-label">Nombres y apellidos</label>
                     @else
                         <label id="label-juridica" for="razon_social" class="form-label">Nombre de la empresa</label>
                     @endif
                     
-                    <input type="text" name="razon_social" id="razon_social" class="form-control" value="{{old('razon_social',$cliente->persona->razon_social)}}">
+                    <input type="text" name="razon_social" id="razon_social" class="form-control" value="{{old('razon_social',$proveedor->persona->razon_social)}}">
 
                     @error('razon_social')
                         <small class="text-danger">{{'*'.$message}}</small>
@@ -45,7 +45,7 @@
                 <!--DIRECCION-->
                 <div class="col-md-12 mb-2">
                     <label for="direccion" class="form-label">Dirección:</label>
-                    <input type="text" name="direccion" id="direccion" class="form-control" value="{{old('direccion',$cliente->persona->direccion)}}">
+                    <input type="text" name="direccion" id="direccion" class="form-control" value="{{old('direccion',$proveedor->persona->direccion)}}">
 
                     @error('direccion')
                         <small class="text-danger">{{'*'.$message}}</small>
@@ -57,7 +57,7 @@
                     <label for="documento_id" class="form-label">Tipo de documento:</label>
                     <select class="form-select" name="documento_id" id="documento_id">
                         @foreach ($documentos as $item)
-                        @if ($cliente->persona->documento_id == $item->id)
+                        @if ($proveedor->persona->documento_id == $item->id)
                             <option selected value="{{$item->id}}" {{old('documento_id') == $item->id ? 'selected' : ''}}>{{$item->tipo_documento}}</option>
                         @else
                             <option value="{{$item->id}}" {{old('documento_id') == $item->id ? 'selected' : ''}}>{{$item->tipo_documento}}</option>
@@ -73,7 +73,7 @@
                 <!--NUMERO DE DOCUMENTO-->
                 <div class="col-md-6 mb-2">
                     <label for="numero_documento" class="form-label">Número de documento:</label>
-                    <input type="text" name="numero_documento" id="numero_documento" class="form-control" value="{{old('numero_documento',$cliente->persona->numero_documento)}}">
+                    <input type="text" name="numero_documento" id="numero_documento" class="form-control" value="{{old('numero_documento',$proveedor->persona->numero_documento)}}">
 
                     @error('numero_documento')
                         <small class="text-danger">{{'*'.$message}}</small>
