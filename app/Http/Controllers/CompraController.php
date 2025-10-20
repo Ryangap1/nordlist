@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreCompraRequest;
 use App\Models\Comprobante;
 use App\Models\Producto;
 use App\Models\Proveedor;
+use GuzzleHttp\Psr7\Query;
 use Illuminate\Http\Request;
 
 class CompraController
@@ -22,7 +24,9 @@ class CompraController
      */
     public function create()
     {
-        $proveedores = Proveedor::all();
+        $proveedores = Proveedor::wherehas('persona',function($query){
+            $query->where('estado',1);
+        })->get();
         $comprobantes = Comprobante::all();
         $productos = Producto::all();
         return view('compra.create',compact('proveedores','comprobantes','productos'));
@@ -31,9 +35,9 @@ class CompraController
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreCompraRequest $request)
     {
-        //
+        dd($request);
     }
 
     /**

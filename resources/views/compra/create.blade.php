@@ -5,6 +5,7 @@
 @push('css')
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/css/bootstrap-select.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 @endpush
 
 @section('content')
@@ -18,7 +19,7 @@
         </ol>
     </div>
 
-    <form action="" method="POST">
+    <form action="{{route('compras.store')}}" method="POST">
         @csrf
         <div class="container mt-4 ">
             <div class="row gy-4">
@@ -57,7 +58,7 @@
 
                             <!---BOTON PARA AGREGAR---->
                             <div class="col-md-12 mb-2 mt-2 text-end">
-                                <button class="btn btn-primary">Agregar</button>
+                                <button id="btn_agregar" class="btn btn-primary">Agregar</button>
                             </div>
 
                             <!---TABLA PARA EL DETALLE DE LA COMPRA---->
@@ -83,27 +84,33 @@
                                                 <td></td>
                                                 <td></td>
                                                 <td></td>
+                                                <td></td>
                                             </tr>
                                         </tbody>
                                         <tfoot>
-                                            <tr>
+                                            <tr class="tr-oscuro">
                                                 <th></th>
-                                                <th>Sumas</th>
-                                                <th>0</th>
+                                                <th colspan="4">Sumas</th>
+                                                <th><span id="sumas">0</span></th>
                                             </tr>
                                             <tr>
                                                 <th></th>
-                                                <th>IGV %</th>
-                                                <th>0</th>
+                                                <th colspan="4">IGV %</th>
+                                                <th><span id="igv">0</span></th>
                                             </tr>
                                             <tr>
                                                 <th></th>
-                                                <th>Total</th>
-                                                <th>0</th>
+                                                <th colspan="4">Total</th>
+                                                <th><span id="total">0</span></th>
                                             </tr>
                                         </tfoot>
                                     </table>
                                 </div>
+                            </div>
+
+                            <!---BOTON PARA CANCELAR LA COMPRA---->
+                            <div class="col-md-12 mb-2">
+                                <button class="btn btn-danger text-white" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" id="cancelar">Cancelar compra</button>
                             </div>
                         </div>
                     </div>
@@ -123,6 +130,9 @@
                                         <option value="{{$item->id}}">{{$item->persona->razon_social}}</option>
                                     @endforeach
                                 </select>
+                                @error('proveedor_id')
+                                    <small class="text-danger">{{'*'.$message}}</small>
+                                @enderror
                             </div>
 
                             <!---TIPO DE COMPROBANTE---->
@@ -133,18 +143,27 @@
                                         <option value="{{$item->id}}">{{$item->tipo_comprobante}}</option>
                                     @endforeach
                                 </select>
+                                @error('comprobante_id')
+                                    <small class="text-danger">{{'*'.$message}}</small>
+                                @enderror
                             </div>
 
                             <!---NUMERO DE COMPROBANTE---->
                             <div class="col-md-12 mb-2">
                                 <label for="numero_comprobante" class="form-label">Número de comprobante:</label>
                                 <input required type="text" name="numero_comprobante" id="numero_comprobante" class="form-control">
+                                @error('numero_comprobante')
+                                    <small class="text-danger">{{'*'.$message}}</small>
+                                @enderror
                             </div>
 
                             <!---IMPUESTO---->
                             <div class="col-md-6 mb-2">
-                                <label for="impuesto" class="form-label">Impuesto:</label>
+                                <label for="impuesto" class="form-label">Impuesto (igv):</label>
                                 <input readonly type="text" name="impuesto" id="impuesto" class="form-control border-success">
+                                @error('impuesto')
+                                    <small class="text-danger">{{'*'.$message}}</small>
+                                @enderror
                             </div>
 
                             <!---FECHA---->
@@ -155,17 +174,232 @@
 
                             <!---BOTONES---->
                             <div class="col-md-12 mb-2 text-center">
-                                <button type="submit" class="btn btn-success">Guardar</button>
+                                <button type="submit" class="btn btn-success" id="guardar">Guardar</button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            
+        </div>
+
+        <!-- MODAL PARA CANCELAR LA COMPRA -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Modal de confirmacion</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                ¿Estás seguro de que quieres eliminar esta compra?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button id="btnCancelarCompra" type="button" class="btn btn-danger" data-bs-dismiss="modal">Confirmar</button>
+            </div>
+            </div>
+        </div>
         </div>
     </form>
 @endsection
 
 @push('js')
     <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/js/bootstrap-select.min.js"></script>
+
+    <script>
+        $(document).ready(function(){
+            $('#btn_agregar').click(function(){
+                agregarProducto();
+            });
+
+            $('#btnCancelarCompra').click(function(){
+                cancelarCompra();
+            });
+
+            disableButtons();
+
+            $('#impuesto').val(impuesto + '%');
+        });
+
+        //variables
+        let cont = 0;
+        let subtotal = [];
+        let sumas = 0;
+        let igv = 0;
+        let total = 0;
+
+        //constantes
+        const impuesto = 18;
+
+        function cancelarCompra(){
+            
+            //eliminar tbody de la tabla
+            $('#tabla_detalle > tbody').empty();
+
+            //añadir una nueva fila a la tabla
+            let fila = '<tr>' +
+                '<th></th>' +
+                '<td></td>' +
+                '<td></td>' +
+                '<td></td>' +
+                '<td></td>' +
+                '<td></td>' + 
+                '<td></td>' +
+                '</tr>';
+            $('#tabla_detalle').append(fila);
+
+            //reiniciar valores de las variables
+            cont = 0;
+            subtotal = [];
+            sumas = 0;
+            igv = 0;
+            total = 0;
+
+            //mostrar los campos calculados
+            $('#sumas').html(sumas);
+            $('#igv').html(igv);
+            $('#total').html(total);
+            $('#impuesto').val(impuesto + '%');
+
+            limpiarCampos();
+
+            disableButtons();
+        }
+
+        function disableButtons(){
+            if (total == 0) {
+                $('#guardar').hide()
+                $('#cancelar').hide()
+            } else {
+                $('#guardar').show()
+                $('#cancelar').show()
+            }
+        }
+
+        function agregarProducto(){
+            //obtener valores de los campos
+            let idProducto = $('#producto_id').val();
+            let nameProducto = ($('#producto_id option:selected').text()).split(' - ')[1];
+            let cantidad = $('#cantidad').val();
+            let precioCompra = $('#precio_compra').val();
+            let precioVenta = $('#precio_venta').val();
+
+            //validaciones
+            //1. para que los campos no esten vacios
+            if (idProducto != '' && nameProducto != '' && cantidad != '' && precioCompra != '' && precioVenta != '') {
+
+                //2. para que los valores ingresados sean los correctos
+                if (parseInt(cantidad) > 0 && (cantidad%1 == 0) && parseFloat(precioCompra) > 0 && parseFloat(precioVenta) > 0) {
+
+                    //3. para que el precio de compra sea menor que el precio de venta
+                    if (parseFloat(precioVenta) > parseFloat(precioCompra)) {
+                       
+                        //calcular valores
+                        subtotal[cont] = cantidad * precioCompra;
+                        sumas+=subtotal[cont];
+                        igv = sumas/100 * impuesto;
+                        total = sumas + igv;
+
+                        let fila = '<tr id="fila'+ cont +'">'+
+                            '<th>'+ (cont + 1) +'</th>'+
+                            '<td><input type="hidden" name="arrayidproducto[]" value="' + idProducto + '">' + nameProducto + '</td>'+
+                            '<td><input type="hidden" name="arraycantidad[]" value="' + cantidad + '">' + cantidad +'</td>'+
+                            '<td><input type="hidden" name="arraypreciocompra[]" value="' + precioCompra + '">' + precioCompra +'</td>'+
+                            '<td><input type="hidden" name="arrayprecioventa[]" value="' + precioVenta + '">' + precioVenta +'</td>'+
+                            '<td>' + subtotal[cont] +'</td>'+
+                            '<td><button class="btn btn-danger" type="button" onClick="eliminarProducto('+ cont +')"><i class="fa-solid fa-trash"></i></button></td>' +
+                            '</tr>';
+
+                        //acciones despues de añadir la fila
+                        $('#tabla_detalle').append(fila);
+                        limpiarCampos();
+                        cont++;
+                        disableButtons();
+
+                        //mostrar los campos calculados
+                        $('#sumas').html(sumas);
+                        $('#igv').html(igv);
+                        $('#total').html(total);
+                        $('#impuesto').val(igv);
+
+                    } else {
+                        showModal('Precio de venta incorrecto')
+                    }
+                    
+                    
+
+                } else {
+                    showModal('Valores incorrectos')
+                }
+                
+                
+
+
+                
+            } else {
+                showModal('Faltan campos por llenar')
+            }
+
+            
+        }
+
+        function eliminarProducto(indice){
+            //calcular valores
+            sumas = round(subtotal[indice]);
+            igv = round(sumas/100 * impuesto);
+            total = round(sumas + igv);
+
+            //mostrar los campos calculados
+            $('#sumas').html(sumas);
+            $('#igv').html(igv);
+            $('#total').html(total);
+            $('#impuesto').val(igv);
+
+            //eliminar la fila de la tabla
+            $('#fila'+indice).remove();
+
+            disableButtons();
+
+        }
+
+        function limpiarCampos(){
+            let select = $('#producto_id');
+            select.selectpicker();
+            select.selectpicker('val','');
+            $('#cantidad').val('');
+            $('#precio_compra').val('');
+            $('#precio_venta').val('');
+        }
+
+        function round(num, decimales = 2) {
+            var signo = (num >= 0 ? 1 : -1);
+            num = num * signo;
+            if (decimales === 0) //con 0 decimales
+                return signo * Math.round(num);
+            // round(x * 10 ^ decimales)
+            num = num.toString().split('e');
+            num = Math.round(+(num[0] + 'e' + (num[1] ? (+num[1] + decimales) : decimales)));
+            // x * 10 ^ (-decimales)
+            num = num.toString().split('e');
+            return signo * (num[0] + 'e' + (num[1] ? (+num[1] - decimales) : -decimales));
+        } //fuente: https://es.stackoverflow.com/questions/48958/redondear-a-dos-decimales-cuando-sea-necesario
+
+        function showModal(message, icon = 'error'){
+            const Toast = Swal.mixin({
+                toast: true,
+                position: "top-end",
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.onmouseenter = Swal.stopTimer;
+                    toast.onmouseleave = Swal.resumeTimer;
+                }
+                });
+                Toast.fire({
+                icon: icon,
+                title: message
+                });
+        }
+    </script>
 @endpush
