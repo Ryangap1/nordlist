@@ -101,7 +101,7 @@
                                             <tr>
                                                 <th></th>
                                                 <th colspan="4">Total</th>
-                                                <th><span id="total">0</span></th>
+                                                <th><input type="hidden" name="total" value="0" id="inputTotal"><span id="total">0</span></th>
                                             </tr>
                                         </tfoot>
                                     </table>
@@ -170,6 +170,11 @@
                             <div class="col-md-6 mb-2">
                                 <label for="fecha" class="form-label">Fecha:</label>
                                 <input readonly type="date" name="fecha" id="fecha" class="form-control border-success" value="<?php echo date("Y-m-d") ?>">
+                                <?php
+                                use Carbon\Carbon;
+                                $fecha_hora = Carbon::now()->toDateTimeString();
+                                ?>
+                                <input type="hidden" name="fecha_hora" value="{{$fecha_hora}}">
                             </div>
 
                             <!---BOTONES---->
@@ -260,6 +265,7 @@
             $('#igv').html(igv);
             $('#total').html(total);
             $('#impuesto').val(impuesto + '%');
+            $('#inputTotal').val(total);
 
             limpiarCampos();
 
@@ -321,6 +327,7 @@
                         $('#igv').html(igv);
                         $('#total').html(total);
                         $('#impuesto').val(igv);
+                        $('#inputTotal').val(total);
 
                     } else {
                         showModal('Precio de venta incorrecto')
@@ -354,6 +361,7 @@
             $('#igv').html(igv);
             $('#total').html(total);
             $('#impuesto').val(igv);
+            $('#inputTotal').val(total);
 
             //eliminar la fila de la tabla
             $('#fila'+indice).remove();
