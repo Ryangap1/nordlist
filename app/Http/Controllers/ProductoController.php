@@ -192,7 +192,7 @@ class ProductoController
                 ->update([
                     'estado' => 0
                 ]);
-                $message = 'Producto eliminado';
+                $message = 'Producto desactivado';
         } else {
             Producto::where('id',$producto->id)
                 ->update([

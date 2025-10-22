@@ -20,7 +20,14 @@ class CompraController
      */
     public function index()
     {
-        return view('compra.index');
+        $compras = Compra::with('comprobante','proveedor.persona')
+        ->where('estado',1)
+        ->latest()
+        ->get();
+
+        //dd($compras);
+
+        return view('compra.index',compact('compras'));
     }
 
     /**
@@ -80,10 +87,14 @@ class CompraController
                 ->update([
                     'stock' => $stockActual + $stockNuevo
                 ]);
+
+                $cont++;
             }
 
             DB::commit();
         }catch(Exception $e){
+
+            //dd($e);
             DB::rollBack();
         }
 
@@ -93,9 +104,10 @@ class CompraController
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Compra $compra)
     {
-        //
+        //dd($compra->productos);
+        return view('compra.show', compact('compra'));
     }
 
     /**
@@ -119,6 +131,11 @@ class CompraController
      */
     public function destroy(string $id)
     {
-        //
+        Compra::where('id',$id)
+        ->update([
+            'estado' => 0
+        ]);
+
+        return redirect()->route('compras.index')->with('success','Compra eliminada');
     }
 }

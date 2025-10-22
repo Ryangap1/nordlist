@@ -108,7 +108,7 @@ class ProveedorController
                 ->update([
                     'estado' => 0
                 ]);
-                $message = 'Proveedor eliminado';
+                $message = 'Proveedor desactivado';
         } else {
             Persona::where('id',$persona->id)
                 ->update([

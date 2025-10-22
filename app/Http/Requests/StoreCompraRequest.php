@@ -26,6 +26,7 @@ class StoreCompraRequest extends FormRequest
             'comprobante_id' => 'required|exists:comprobantes,id',
             'numero_comprobante' => 'required|unique:compras,numero_comprobante|max:255',
             'fecha_hora' => 'required',
+            'impuesto' => 'required',
             'total' => 'required'
         ];
     }

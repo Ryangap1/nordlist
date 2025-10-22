@@ -7,6 +7,7 @@ use App\Http\Controllers\MarcaController;
 use App\Http\Controllers\PresentacionController;
 use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\ProveedorController;
+use App\Http\Controllers\VentaController;
 use Illuminate\Routing\Route as RoutingRoute;
 use Illuminate\Support\Facades\Route;
 
@@ -31,6 +32,8 @@ Route::resource('proveedores', ProveedorController::class)
 ->parameters(['proveedores' => 'proveedor']);
 
 Route::resource('compras', CompraController::class);
+
+Route::resource('ventas', VentaController::class);
 
 Route::get('/login', function () {
     return view('auth.login');

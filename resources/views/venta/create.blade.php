@@ -1,6 +1,6 @@
 @extends('template')
 
-@section('title','Crear compras')
+@section('title','Realizar venta')
     
 @push('css')
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/css/bootstrap-select.min.css">
@@ -11,21 +11,21 @@
 @section('content')
 
     <div class="container-fluid px-4">
-        <h1 class="mt-4 text-center">Crear compra</h1>
+        <h1 class="mt-4 text-center">Crear ventas</h1>
         <ol class="breadcrumb mb-4">
             <li class="breadcrumb-item active"><a href="{{route ('panel')}}">Inicio</a></li>
-            <li class="breadcrumb-item active"><a href="{{route ('compras.index')}}">Compra</a></li>
-            <li class="breadcrumb-item active">Crear compra</li>
+            <li class="breadcrumb-item active"><a href="{{route ('ventas.index')}}">Venta</a></li>
+            <li class="breadcrumb-item active">Crear ventas</li>
         </ol>
     </div>
 
-    <form action="{{route('compras.store')}}" method="POST">
+    <form action="{{route('ventas.store')}}" method="POST">
         @csrf
         <div class="container mt-4 ">
             <div class="row gy-4">
-                <!---COMPRA PRODUCTO---->
+                <!---PRODUCTO VENTA---->
                 <div class="col-md-8">
-                    <div class="text-white bg-primary p-1 text-center">Detalles de la compra
+                    <div class="text-white bg-primary p-1 text-center">Detalles de la venta
                     </div>
                     <div class="p-3 border border-3 border-primary">
                         <div class="row">
@@ -33,9 +33,21 @@
                             <div class="col-md-12 mb-2">
                                 <select name="producto_id" id="producto_id" class="form-control selectpicker" data-live-search="true" data_size="3" title="Selecciona un producto">
                                     @foreach ($productos as $item)
-                                        <option value="{{$item->id}}">{{$item->codigo.' - '.$item->nombre}}</option>
+                                        <option value="{{$item->id}}-{{$item->stock}}-{{$item->precio_venta}}">{{$item->codigo.' - '.$item->nombre}}</option>
                                     @endforeach
                                 </select>
+                            </div>
+
+                            <!---STOCK---->
+                            <div class="d-flex justify-content-end mb-4">
+                                <div class="col-md-6 mb-2">
+                                    <div class="row">
+                                        <label for="stock" class="form-label col-sm-4">En stock:</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control">
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
                             <!---CANTIDAD---->
@@ -44,16 +56,16 @@
                                 <input type="number" name="cantidad" id="cantidad" class="form-control">
                             </div>
 
-                            <!---PRECIO DE COMPRA---->
-                            <div class="col-md-4 mb-2">
-                                <label for="precio_compra" class="form-label">Precio de compra:</label>
-                                <input type="number" name="precio_compra" id="precio_compra" class="form-control" step="0.1">
-                            </div>
-
                             <!---PRECIO DE VENTA---->
                             <div class="col-md-4 mb-2">
                                 <label for="precio_venta" class="form-label">Precio de venta:</label>
                                 <input type="number" name="precio_venta" id="precio_venta" class="form-control" step="0.1">
+                            </div>
+
+                            <!---DESCUENTO---->
+                            <div class="col-md-4 mb-2">
+                                <label for="descuento" class="form-label">Descuento:</label>
+                                <input type="number" name="descuento" id="descuento" class="form-control">
                             </div>
 
                             <!---BOTON PARA AGREGAR---->
@@ -61,7 +73,7 @@
                                 <button id="btn_agregar" class="btn btn-primary">Agregar</button>
                             </div>
 
-                            <!---TABLA PARA EL DETALLE DE LA COMPRA---->
+                            <!---TABLA PARA EL DETALLE DE LA VENTA---->
                             <div class="col-md-12">
                                 <div class="table-responsive">
                                     <table id="tabla_detalle" class="table table-hover">
@@ -70,8 +82,8 @@
                                                 <th>#</th>
                                                 <th>Producto</th>
                                                 <th>Cantidad</th>
-                                                <th>Precio compra</th>
                                                 <th>Precio venta</th>
+                                                <th>Descuento</th>
                                                 <th>Subtotal</th>
                                                 <th></th>
                                             </tr>
@@ -108,29 +120,29 @@
                                 </div>
                             </div>
 
-                            <!---BOTON PARA CANCELAR LA COMPRA---->
+                            <!---BOTON PARA CANCELAR LA VENTA---->
                             <div class="col-md-12 mb-2">
-                                <button class="btn btn-danger text-white" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" id="cancelar">Cancelar compra</button>
+                                <button class="btn btn-danger text-white" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" id="cancelar">Cancelar venta</button>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!---PRODUCTO---->
+                <!---VENTA---->
                 <div class="col-md-4">
                     <div class="text-white bg-success p-1 text-center">Datos generales
                     </div>
                     <div class="p-3 border border-3 border-success">
                         <div class="row">
-                            <!---PROVEEDOR---->
+                            <!---CLIENTE---->
                             <div class="col-md-12 mb-2">
-                                <label for="proveedor_id" class="form-label">Proveedor:</label>
-                                <select name="proveedor_id" id="proveedor_id" class="form-control selectpicker show-tick" data-live-search="true" title="selecciona" data-size="3">
-                                    @foreach ($proveedores as $item)
+                                <label for="cliente_id" class="form-label">Cliente:</label>
+                                <select name="cliente_id" id="cliente_id" class="form-control selectpicker show-tick" data-live-search="true" title="selecciona" data-size="3">
+                                    @foreach ($clientes as $item)
                                         <option value="{{$item->id}}">{{$item->persona->razon_social}}</option>
                                     @endforeach
                                 </select>
-                                @error('proveedor_id')
+                                @error('cliente_id')
                                     <small class="text-danger">{{'*'.$message}}</small>
                                 @enderror
                             </div>
@@ -187,7 +199,7 @@
             </div>
         </div>
 
-        <!-- MODAL PARA CANCELAR LA COMPRA -->
+        <!-- MODAL PARA CANCELAR LA VENTA -->
         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -196,11 +208,11 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                ¿Estás seguro de que quieres eliminar esta compra?
+                ¿Estás seguro de que quieres eliminar esta venta?
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                <button id="btnCancelarCompra" type="button" class="btn btn-danger" data-bs-dismiss="modal">Confirmar</button>
+                <button id="btnCancelarVenta" type="button" class="btn btn-danger" data-bs-dismiss="modal">Confirmar</button>
             </div>
             </div>
         </div>
@@ -213,6 +225,10 @@
 
     <script>
         $(document).ready(function(){
+
+            $('#producto_id').change(mostrarValores);
+
+        /*
             $('#btn_agregar').click(function(){
                 agregarProducto();
             });
@@ -223,191 +239,12 @@
 
             disableButtons();
 
-            $('#impuesto').val(impuesto + '%');
+            $('#impuesto').val(impuesto + '%'); */
         });
 
-        //variables
-        let cont = 0;
-        let subtotal = [];
-        let sumas = 0;
-        let IVA = 0;
-        let total = 0;
-
-        //constantes
-        const impuesto = 19;
-
-        function cancelarCompra(){
-            
-            //eliminar tbody de la tabla
-            $('#tabla_detalle > tbody').empty();
-
-            //añadir una nueva fila a la tabla
-            let fila = '<tr>' +
-                '<th></th>' +
-                '<td></td>' +
-                '<td></td>' +
-                '<td></td>' +
-                '<td></td>' +
-                '<td></td>' + 
-                '<td></td>' +
-                '</tr>';
-            $('#tabla_detalle').append(fila);
-
-            //reiniciar valores de las variables
-            cont = 0;
-            subtotal = [];
-            sumas = 0;
-            IVA = 0;
-            total = 0;
-
-            //mostrar los campos calculados
-            $('#sumas').html(sumas);
-            $('#IVA').html(IVA);
-            $('#total').html(total);
-            $('#impuesto').val(impuesto + '%');
-            $('#inputTotal').val(total);
-
-            limpiarCampos();
-
-            disableButtons();
+        function mostrarValores(){
+            let dataProducto = document.getElementById('producto_id').value.split('-');
         }
 
-        function disableButtons(){
-            if (total == 0) {
-                $('#guardar').hide()
-                $('#cancelar').hide()
-            } else {
-                $('#guardar').show()
-                $('#cancelar').show()
-            }
-        }
-
-        function agregarProducto(){
-            //obtener valores de los campos
-            let idProducto = $('#producto_id').val();
-            let nameProducto = ($('#producto_id option:selected').text()).split(' - ')[1];
-            let cantidad = $('#cantidad').val();
-            let precioCompra = $('#precio_compra').val();
-            let precioVenta = $('#precio_venta').val();
-
-            //validaciones
-            //1. para que los campos no esten vacios
-            if (idProducto != '' && nameProducto != '' && cantidad != '' && precioCompra != '' && precioVenta != '') {
-
-                //2. para que los valores ingresados sean los correctos
-                if (parseInt(cantidad) > 0 && (cantidad%1 == 0) && parseFloat(precioCompra) > 0 && parseFloat(precioVenta) > 0) {
-
-                    //3. para que el precio de compra sea menor que el precio de venta
-                    if (parseFloat(precioVenta) > parseFloat(precioCompra)) {
-                       
-                        //calcular valores
-                        subtotal[cont] = cantidad * precioCompra;
-                        sumas+=subtotal[cont];
-                        IVA = sumas/100 * impuesto;
-                        total = sumas + IVA;
-
-                        let fila = '<tr id="fila'+ cont +'">'+
-                            '<th>'+ (cont + 1) +'</th>'+
-                            '<td><input type="hidden" name="arrayidproducto[]" value="' + idProducto + '">' + nameProducto + '</td>'+
-                            '<td><input type="hidden" name="arraycantidad[]" value="' + cantidad + '">' + cantidad +'</td>'+
-                            '<td><input type="hidden" name="arraypreciocompra[]" value="' + precioCompra + '">' + precioCompra +'</td>'+
-                            '<td><input type="hidden" name="arrayprecioventa[]" value="' + precioVenta + '">' + precioVenta +'</td>'+
-                            '<td>' + subtotal[cont] +'</td>'+
-                            '<td><button class="btn btn-danger" type="button" onClick="eliminarProducto('+ cont +')"><i class="fa-solid fa-trash"></i></button></td>' +
-                            '</tr>';
-
-                        //acciones despues de añadir la fila
-                        $('#tabla_detalle').append(fila);
-                        limpiarCampos();
-                        cont++;
-                        disableButtons();
-
-                        //mostrar los campos calculados
-                        $('#sumas').html(sumas);
-                        $('#IVA').html(IVA);
-                        $('#total').html(total);
-                        $('#impuesto').val(IVA);
-                        $('#inputTotal').val(total);
-
-                    } else {
-                        showModal('Precio de venta incorrecto')
-                    }
-                    
-                    
-
-                } else {
-                    showModal('Valores incorrectos')
-                }
-                
-                
-
-
-                
-            } else {
-                showModal('Faltan campos por llenar')
-            }
-
-            
-        }
-
-        function eliminarProducto(indice){
-            //calcular valores
-            sumas = round(subtotal[indice]);
-            IVA = round(sumas/100 * impuesto);
-            total = round(sumas + IVA);
-
-            //mostrar los campos calculados
-            $('#sumas').html(sumas);
-            $('#IVA').html(IVA);
-            $('#total').html(total);
-            $('#impuesto').val(IVA);
-            $('#inputTotal').val(total);
-
-            //eliminar la fila de la tabla
-            $('#fila'+indice).remove();
-
-            disableButtons();
-
-        }
-
-        function limpiarCampos(){
-            let select = $('#producto_id');
-            select.selectpicker();
-            select.selectpicker('val','');
-            $('#cantidad').val('');
-            $('#precio_compra').val('');
-            $('#precio_venta').val('');
-        }
-
-        function round(num, decimales = 2) {
-            var signo = (num >= 0 ? 1 : -1);
-            num = num * signo;
-            if (decimales === 0) //con 0 decimales
-                return signo * Math.round(num);
-            // round(x * 10 ^ decimales)
-            num = num.toString().split('e');
-            num = Math.round(+(num[0] + 'e' + (num[1] ? (+num[1] + decimales) : decimales)));
-            // x * 10 ^ (-decimales)
-            num = num.toString().split('e');
-            return signo * (num[0] + 'e' + (num[1] ? (+num[1] - decimales) : -decimales));
-        } //fuente: https://es.stackoverflow.com/questions/48958/redondear-a-dos-decimales-cuando-sea-necesario
-
-        function showModal(message, icon = 'error'){
-            const Toast = Swal.mixin({
-                toast: true,
-                position: "top-end",
-                showConfirmButton: false,
-                timer: 3000,
-                timerProgressBar: true,
-                didOpen: (toast) => {
-                    toast.onmouseenter = Swal.stopTimer;
-                    toast.onmouseleave = Swal.resumeTimer;
-                }
-                });
-                Toast.fire({
-                icon: icon,
-                title: message
-                });
-        }
     </script>
 @endpush

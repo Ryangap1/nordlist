@@ -94,7 +94,7 @@
                                 @if ($item->estado == 1)
                                     <span class="fw-bolder rounded p-1 bg-success text-white text-center">Activo</span>
                                 @else
-                                    <span class="fw-bolder rounded p-1 bg-danger text-white text-center">Eliminado</span>
+                                    <span class="fw-bolder rounded p-1 bg-danger text-white text-center">Desactivado</span>
                                 @endif
                             </td>
                             <td>
@@ -108,7 +108,7 @@
 
                                     @if ($item->estado == 1)
 
-                                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmModal-{{$item->id}}">Eliminar</button>
+                                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmModal-{{$item->id}}">Desactivar</button>
 
                                     @else
 
@@ -175,7 +175,7 @@
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        {{$item->estado == 1 ? '¿Estás seguro de que quieres eliminar este producto?' : '¿Estás seguro de que quieres restaurar este producto?'}}
+                                        {{$item->estado == 1 ? '¿Estás seguro de que quieres desactivar este producto?' : '¿Estás seguro de que quieres restaurar este producto?'}}
                                     </div>
                                     <div class="modal-footer">
                                         

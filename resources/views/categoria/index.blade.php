@@ -77,7 +77,7 @@
                                     
                                 @else
 
-                                <span class="fw-bolder p-1 rounded bg-danger text-white">Eliminado</span>
+                                <span class="fw-bolder p-1 rounded bg-danger text-white">Desactivado</span>
                                     
                                 @endif
                             </td>
@@ -88,7 +88,7 @@
                                         <button type="submit" class="btn btn-warning">Editar</button>
                                     </form>
                                     @if ($categoria->caracteristica->estado == 1)
-                                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmModal-{{$categoria->id}}">Eliminar</button>
+                                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmModal-{{$categoria->id}}">Desactivar</button>
 
                                     @else
                                         <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#confirmModal-{{$categoria->id}}">Restaurar</button>
@@ -108,7 +108,7 @@
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        {{$categoria->caracteristica->estado == 1 ? '¿Estás seguro de que quieres eliminar esta categoria?' : '¿Estás seguro de que quieres restaurar esta categoria?'}}
+                                        {{$categoria->caracteristica->estado == 1 ? '¿Estás seguro de que quieres desactivar esta categoria?' : '¿Estás seguro de que quieres restaurar esta categoria?'}}
                                     </div>
                                     <div class="modal-footer">
                                         

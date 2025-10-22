@@ -110,7 +110,7 @@ class ClienteController
                 ->update([
                     'estado' => 0
                 ]);
-                $message = 'Cliente eliminado';
+                $message = 'Cliente desactivado';
         } else {
             Persona::where('id',$persona->id)
                 ->update([
