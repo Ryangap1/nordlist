@@ -44,7 +44,7 @@
                                     <div class="row">
                                         <label for="stock" class="form-label col-sm-4">En stock:</label>
                                         <div class="col-sm-8">
-                                            <input type="text" class="form-control">
+                                            <input disabled id="stock" type="text" class="form-control">
                                         </div>
                                     </div>
                                 </div>
@@ -59,7 +59,7 @@
                             <!---PRECIO DE VENTA---->
                             <div class="col-md-4 mb-2">
                                 <label for="precio_venta" class="form-label">Precio de venta:</label>
-                                <input type="number" name="precio_venta" id="precio_venta" class="form-control" step="0.1">
+                                <input disabled type="number" name="precio_venta" id="precio_venta" class="form-control" step="0.1">
                             </div>
 
                             <!---DESCUENTO---->
@@ -189,6 +189,9 @@
                                 <input type="hidden" name="fecha_hora" value="{{$fecha_hora}}">
                             </div>
 
+                            <!---USER---->
+                            <input type="hidden" name="user_id" value="{{auth()->user()->id}}">
+
                             <!---BOTONES---->
                             <div class="col-md-12 mb-2 text-center">
                                 <button type="submit" class="btn btn-success" id="guardar">Guardar</button>
@@ -228,23 +231,219 @@
 
             $('#producto_id').change(mostrarValores);
 
-        /*
             $('#btn_agregar').click(function(){
                 agregarProducto();
             });
 
-            $('#btnCancelarCompra').click(function(){
-                cancelarCompra();
+            $('#btnCancelarVenta').click(function(){
+                cancelarVenta();
             });
 
             disableButtons();
 
-            $('#impuesto').val(impuesto + '%'); */
+            $('#impuesto').val(impuesto + '%');
         });
+
+        //variables
+        let cont = 0;
+        let subtotal = [];
+        let sumas = 0;
+        let IVA = 0;
+        let total = 0;
+
+        //constantes
+        const impuesto = 19;
 
         function mostrarValores(){
             let dataProducto = document.getElementById('producto_id').value.split('-');
+            //console.log(dataProducto);
+            $('#stock').val(dataProducto[1]);
+            $('#precio_venta').val(dataProducto[2]);
+            
         }
+
+        function agregarProducto(){
+
+            let dataProducto = document.getElementById('producto_id').value.split('-');
+
+            //obtener valores de los campos
+            let idProducto = dataProducto[0];
+            let nameProducto = $('#producto_id option:selected').text();
+            let cantidad = $('#cantidad').val();
+            let precioVenta = $('#precio_venta').val();
+            let descuento = $('#descuento').val();
+            let stock = $('#stock').val();
+
+            if(descuento == ''){
+                descuento = 0;
+            }
+
+            //validaciones
+            //1. para que los campos no esten vacios
+            if (idProducto != '' && cantidad != '') {
+
+                //2. para que los valores ingresados sean los correctos
+                if (parseInt(cantidad) > 0 && (cantidad%1 == 0) &&  parseFloat(descuento) >= 0) {
+
+                    //3. para que la cantidad no supere el stock
+                    if (parseFloat(cantidad) <= parseFloat(stock)) {
+                       
+                        //calcular valores
+                        subtotal[cont] = round(cantidad * precioVenta - descuento);
+                        sumas+=subtotal[cont];
+                        IVA = round(sumas/100 * impuesto);
+                        total = round(sumas + IVA);
+
+                        //CREAR LA FILA
+                        let fila = '<tr id="fila'+ cont +'">'+
+                            '<th>'+ (cont + 1) +'</th>'+
+                            '<td><input type="hidden" name="arrayidproducto[]" value="' + idProducto + '">' + nameProducto + '</td>'+
+                            '<td><input type="hidden" name="arraycantidad[]" value="' + cantidad + '">' + cantidad +'</td>'+
+                            '<td><input type="hidden" name="arrayprecioventa[]" value="' + precioVenta + '">' + precioVenta +'</td>'+
+                            '<td><input type="hidden" name="arraydescuento[]" value="' + descuento + '">' + descuento +'</td>'+
+                            '<td>' + subtotal[cont] +'</td>'+
+                            '<td><button class="btn btn-danger" type="button" onClick="eliminarProducto('+ cont +')"><i class="fa-solid fa-trash"></i></button></td>' +
+                            '</tr>';
+
+                        //acciones despues de añadir la fila
+                        $('#tabla_detalle').append(fila);
+                        limpiarCampos();
+                        cont++;
+                        disableButtons();
+
+                        //mostrar los campos calculados
+                        $('#sumas').html(sumas);
+                        $('#IVA').html(IVA);
+                        $('#total').html(total);
+                        $('#impuesto').val(IVA);
+                        $('#inputTotal').val(total);
+
+                    } else {
+                        showModal('Cantidad incorrecta')
+                    }
+                    
+                    
+
+                } else {
+                    showModal('Valores incorrectos')
+                }
+                
+                
+
+
+                
+            } else {
+                showModal('Faltan campos por llenar')
+            }
+
+        }
+
+        function cancelarVenta(){
+            
+            //eliminar tbody de la tabla
+            $('#tabla_detalle > tbody').empty();
+
+            //añadir una nueva fila a la tabla
+            let fila = '<tr>' +
+                '<th></th>' +
+                '<td></td>' +
+                '<td></td>' +
+                '<td></td>' +
+                '<td></td>' +
+                '<td></td>' + 
+                '<td></td>' +
+                '</tr>';
+            $('#tabla_detalle').append(fila);
+
+            //reiniciar valores de las variables
+            cont = 0;
+            subtotal = [];
+            sumas = 0;
+            IVA = 0;
+            total = 0;
+
+            //mostrar los campos calculados
+            $('#sumas').html(sumas);
+            $('#IVA').html(IVA);
+            $('#total').html(total);
+            $('#impuesto').val(impuesto + '%');
+            $('#inputTotal').val(total);
+
+            limpiarCampos();
+
+            disableButtons();
+        }
+
+        function eliminarProducto(indice){
+            //calcular valores
+            sumas -= round(subtotal[indice]);
+            IVA = round(sumas/100 * impuesto);
+            total = round(sumas + IVA);
+
+            //mostrar los campos calculados
+            $('#sumas').html(sumas);
+            $('#IVA').html(IVA);
+            $('#total').html(total);
+            $('#impuesto').val(IVA);
+            $('#inputTotal').val(total);
+
+            //eliminar la fila de la tabla
+            $('#fila'+indice).remove();
+
+            disableButtons();
+
+        }
+
+        function disableButtons(){
+            if (total == 0) {
+                $('#guardar').hide()
+                $('#cancelar').hide()
+            } else {
+                $('#guardar').show()
+                $('#cancelar').show()
+            }
+        }
+
+        function limpiarCampos(){
+            let select = $('#producto_id');
+            select.selectpicker();
+            select.selectpicker('val','');
+            $('#cantidad').val('');
+            $('#precio_venta').val('');
+            $('#descuento').val('');
+            $('#stock').val('');
+        }
+
+        function showModal(message, icon = 'error'){
+            const Toast = Swal.mixin({
+                toast: true,
+                position: "top-end",
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.onmouseenter = Swal.stopTimer;
+                    toast.onmouseleave = Swal.resumeTimer;
+                }
+                });
+                Toast.fire({
+                icon: icon,
+                title: message
+                });
+        }
+
+        function round(num, decimales = 2) {
+            var signo = (num >= 0 ? 1 : -1);
+            num = num * signo;
+            if (decimales === 0) //con 0 decimales
+                return signo * Math.round(num);
+            // round(x * 10 ^ decimales)
+            num = num.toString().split('e');
+            num = Math.round(+(num[0] + 'e' + (num[1] ? (+num[1] + decimales) : decimales)));
+            // x * 10 ^ (-decimales)
+            num = num.toString().split('e');
+            return signo * (num[0] + 'e' + (num[1] ? (+num[1] - decimales) : -decimales));
+        } //fuente: https://es.stackoverflow.com/questions/48958/redondear-a-dos-decimales-cuando-sea-necesario
 
     </script>
 @endpush

@@ -12,26 +12,34 @@
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
         @stack('css')
     </head>
-    <body class="sb-nav-fixed">
 
-    <x-navigation-header></x-navigation-header>
+    @auth
+        <body class="sb-nav-fixed">
 
-        <div id="layoutSidenav">
+            <x-navigation-header></x-navigation-header>
 
-            <x-navigation-menu></x-navigation-menu>
+            <div id="layoutSidenav">
 
-            <div id="layoutSidenav_content">
-                <main>
-                    @yield('content')
-                </main>
+                <x-navigation-menu></x-navigation-menu>
 
-                <x-footer></x-footer>
+                <div id="layoutSidenav_content">
+                    <main>
+                        @yield('content')
+                    </main>
 
+                    <x-footer></x-footer>
+
+                </div>
             </div>
-        </div>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-        <script src="{{asset('js/scripts.js')}}"></script>
-        @stack('js')
-        
-    </body>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+            <script src="{{asset('js/scripts.js')}}"></script>
+            @stack('js')
+            
+        </body>
+    @endauth
+
+    @guest
+        @include('pages.401')
+    @endguest
+
 </html>

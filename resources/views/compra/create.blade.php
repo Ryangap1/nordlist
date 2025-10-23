@@ -301,10 +301,10 @@
                     if (parseFloat(precioVenta) > parseFloat(precioCompra)) {
                        
                         //calcular valores
-                        subtotal[cont] = cantidad * precioCompra;
+                        subtotal[cont] = round(cantidad * precioCompra);
                         sumas+=subtotal[cont];
-                        IVA = sumas/100 * impuesto;
-                        total = sumas + IVA;
+                        IVA = round(sumas/100 * impuesto);
+                        total = round(sumas + IVA);
 
                         let fila = '<tr id="fila'+ cont +'">'+
                             '<th>'+ (cont + 1) +'</th>'+
@@ -352,7 +352,7 @@
 
         function eliminarProducto(indice){
             //calcular valores
-            sumas = round(subtotal[indice]);
+            sumas -= round(subtotal[indice]);
             IVA = round(sumas/100 * impuesto);
             total = round(sumas + IVA);
 
