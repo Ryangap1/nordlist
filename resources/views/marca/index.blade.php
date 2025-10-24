@@ -42,7 +42,7 @@
             <li class="breadcrumb-item active">Marcas</li>
         </ol>
 
-        @can('ver-marca') 
+        @can('crear-marca') 
                             
         <div class="mb-4">
             <a href="{{route('marcas.create')}}">

@@ -42,7 +42,7 @@
             <li class="breadcrumb-item active">Presentaciones</li>
         </ol>
 
-        @can('ver-presentacion') 
+        @can('crear-presentacion') 
                             
         <div class="mb-4">
             <a href="{{route('presentaciones.create')}}">

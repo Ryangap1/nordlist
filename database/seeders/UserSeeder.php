@@ -15,19 +15,22 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        $user = User::create([
-            
-            'name' => 'Ryan',
-            'email' => 'admin@gmail.com',
-            'password' => bcrypt('12345678')
+        // Crear o actualizar el usuario administrador
+        $user = User::updateOrCreate(
+            ['email' => 'admin@gmail.com'],
+            ['name' => 'Ryan', 'password' => bcrypt('password')]
+        );
 
-        ]);
+        // Crear el rol de administrador (si no existe)
+        $rol = Role::firstOrCreate(['name' => 'administrador']);
 
-        //USUARIO ADMINISTRADOR
-        $rol = Role::create(['name' => 'administrador']);
-        $permisos = Permission::pluck('id','id')->all();
+        // Obtener todos los permisos existentes
+        $permisos = Permission::pluck('id', 'id')->all();
+
+        // Asignar todos los permisos al rol administrador
         $rol->syncPermissions($permisos);
-        //$user = User::find(3);
-        $user->assignRole('administrador');
+
+        // Asignar el rol al usuario
+        $user->assignRole($rol);
     }
 }
