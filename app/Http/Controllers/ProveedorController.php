@@ -9,10 +9,19 @@ use App\Models\Persona;
 use App\Models\Proveedor;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 
-class ProveedorController
+class ProveedorController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('permission:ver-proveedor|crear-proveedor|editar-proveedor|eliminar-proveedor', ['only' => ['index']]);
+        $this->middleware('permission:crear-proveedor', ['only' => ['create', 'store']]);
+        $this->middleware('permission:editar-proveedor', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:eliminar-proveedor', ['only' => ['destroy']]);
+        
+    }
     /**
      * Display a listing of the resource.
      */

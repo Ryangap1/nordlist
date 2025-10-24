@@ -9,10 +9,19 @@ use App\Models\Categoria;
 use App\Models\Marca;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 
-class MarcaController
+class MarcaController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('permission:ver-marca|crear-marca|editar-marca|eliminar-marca', ['only' => ['index']]);
+        $this->middleware('permission:crear-marca', ['only' => ['create', 'store']]);
+        $this->middleware('permission:editar-marca', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:eliminar-marca', ['only' => ['destroy']]);
+        
+    }
     /**
      * Display a listing of the resource.
      */

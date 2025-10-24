@@ -10,11 +10,20 @@ use App\Models\Presentacion;
 use App\Models\Producto;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
-class ProductoController
+class ProductoController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('permission:ver-producto|crear-producto|editar-producto|eliminar-producto', ['only' => ['index']]);
+        $this->middleware('permission:crear-producto', ['only' => ['create', 'store']]);
+        $this->middleware('permission:editar-producto', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:eliminar-producto', ['only' => ['destroy']]);
+        
+    }
     /**
      * Display a listing of the resource.
      */

@@ -1,6 +1,6 @@
 @extends('template')
 
-@section('title', 'clientes')
+@section('title', 'Usuarios')
 
 @push('css')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -36,82 +36,50 @@
 @endif
 
 <div class="container-fluid px-4">
-    <h1 class="mt-4 text-center">Clientes</h1>
+    <h1 class="mt-4 text-center">Usuarios</h1>
     <ol class="breadcrumb mb-4">
         <li class="breadcrumb-item active"><a href="{{route ('panel')}}">Inicio</a></li>
-        <li class="breadcrumb-item active">Clientes</li>
+        <li class="breadcrumb-item active">usuarios</li>
     </ol>
 
-    @can('ver-cliente') 
-                            
     <div class="mb-4">
-        <a href="{{route('clientes.create')}}"><button type="button" class="btn btn-primary">Añadir nuevo cliente</button></a>
+        <a href="{{route('users.create')}}"><button type="button" class="btn btn-primary">Añadir nuevo usuario</button></a>
     </div>
-    
-    @endcan
     
     <div class="card mb-4">
         <div class="card-header">
             <i class="fas fa-table me-1"></i>
-            Tabla de clientes
+            Tabla de usuarios
         </div>
         <div class="card-body">
             <table id="datatablesSimple" class="table table-striped">
                 <thead>
                     <tr>
                         <th>Nombre</th>
-                        <th>Dirección</th>
-                        <th>Documento</th>
-                        <th>Tipo de persona</th>
-                        <th>Estado</th>
+                        <th>Email</th>
+                        <th>Rol</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($clientes as $item)
+                    @foreach ($users as $item)
                         <tr>
                             <td>
-                                {{$item->persona->razon_social}}
+                                {{$item->name}}
                             </td>
                             <td>
-                                {{$item->persona->direccion}}
+                                {{$item->email}}
                             </td>
                             <td>
-                                <p class="fw-normal mb-1">{{$item->persona->documento->tipo_documento}}</p>
-                                <p class="text-muted mb-0">{{$item->persona->numero_documento}}</p>
-                            </td>
-                            <td>
-                                {{$item->persona->tipo_persona}}
-                            </td>
-                            <td>
-                                @if ($item->persona->estado == 1)
-                                    <span class="fw-bolder p-1 rounded bg-success text-white">Activo</span>
-                                @else
-                                    <span class="fw-bolder p-1 rounded bg-danger text-white">Desactivado</span>
-                                @endif
+                                {{$item->getRoleNames()->first()}}
                             </td>
                             <td>
                                 <div class="btn-group" role="group" aria-label="Basic mixed styles example">
 
-                                    @can('editar-cliente') 
-                            
-                                    <form action="{{route('clientes.edit',['cliente'=>$item])}}" method="GET">
+                                    <form action="{{route('users.edit',['user'=>$item])}}" method="GET">
                                         <button type="submit" class="btn btn-warning">Editar</button>
                                     </form>
-                                    
-                                    @endcan
-
-                                    @can('eliminar-cliente') 
-                            
-                                    @if ($item->persona->estado == 1)
-                                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmModal-{{$item->id}}">Desactivar</button>
-
-                                    @else
-                                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#confirmModal-{{$item->id}}">Restaurar</button>
-                                    @endif
-                                    
-                                    @endcan
-
+                                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmModal-{{$item->id}}">Eliminar</button>
                                 </div>
                             </td>
                         </tr>
@@ -124,13 +92,13 @@
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        {{$item->persona->estado == 1 ? '¿Estás seguro de que quieres desactivar este cliente?' : '¿Estás seguro de que quieres restaurar este cliente?'}}
+                                        ¿Estás seguro de que quieres eliminar este usuario?
                                     </div>
                                     <div class="modal-footer">
                                         
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
 
-                                        <form action="{{route('clientes.destroy',['cliente'=>$item->persona->id])}}" method="POST">
+                                        <form action="{{route('users.destroy',['user'=>$item->id])}}" method="POST">
 
                                             @method('DELETE')
                                             @csrf

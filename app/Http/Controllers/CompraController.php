@@ -11,10 +11,19 @@ use Carbon\Carbon;
 use Exception;
 use GuzzleHttp\Psr7\Query;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 
-class CompraController
+class CompraController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('permission:ver-compra|crear-compra|mostrar-compra|eliminar-compra', ['only' => ['index']]);
+        $this->middleware('permission:crear-compra', ['only' => ['create', 'store']]);
+        $this->middleware('permission:mostrar-compra', ['only' => ['show']]);
+        $this->middleware('permission:eliminar-compra', ['only' => ['destroy']]);
+        
+    }
     /**
      * Display a listing of the resource.
      */

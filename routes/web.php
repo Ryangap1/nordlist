@@ -9,7 +9,11 @@ use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\MarcaController;
 use App\Http\Controllers\PresentacionController;
 use App\Http\Controllers\ProductoController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProveedorController;
+use App\Http\Controllers\RolController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\VentaController;
 use Illuminate\Routing\Route as RoutingRoute;
 use Illuminate\Support\Facades\Route;
@@ -33,6 +37,12 @@ Route::resource('proveedores', ProveedorController::class)
 Route::resource('compras', CompraController::class);
 
 Route::resource('ventas', VentaController::class);
+
+Route::resource('users', UserController::class);
+
+Route::resource('roles', RolController::class);
+
+Route::resource('profile', ProfileController::class);
 
 Route::get('/login',[LoginController::class, 'index'])->name('login');
 

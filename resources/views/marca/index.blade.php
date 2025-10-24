@@ -42,11 +42,15 @@
             <li class="breadcrumb-item active">Marcas</li>
         </ol>
 
+        @can('ver-marca') 
+                            
         <div class="mb-4">
             <a href="{{route('marcas.create')}}">
-                <button type="button" class="btn btn-primary">Añadir nuevo registro</button>
+                <button type="button" class="btn btn-primary">Añadir nueva marca</button>
             </a>
         </div>
+        
+        @endcan
     
         <div class="card mb-4">
             <div class="card-header">
@@ -85,15 +89,24 @@
                                 <td>
                                     <div class="btn-group" role="group" aria-label="Basic mixed styles example">
 
+                                        @can('editar-marca') 
+                            
                                         <form action="{{route('marcas.edit',['marca'=>$marca])}}" method="GET">
                                             <button type="submit" class="btn btn-warning">Editar</button>
                                         </form>
+                                        
+                                        @endcan
+
+                                        @can('eliminar-marca') 
+                            
                                         @if ($marca->caracteristica->estado == 1)
                                             <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmModal-{{$marca->id}}">Desactivar</button>
 
                                         @else
                                             <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#confirmModal-{{$marca->id}}">Restaurar</button>
                                         @endif
+                                        
+                                        @endcan
                                         
                                         
                                     </div>

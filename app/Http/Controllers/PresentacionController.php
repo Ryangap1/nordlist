@@ -8,10 +8,19 @@ use App\Models\Caracteristica;
 use App\Models\Presentacion;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 
-class PresentacionController
+class PresentacionController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('permission:ver-presentacion|crear-presentacion|editar-presentacion|eliminar-presentacion', ['only' => ['index']]);
+        $this->middleware('permission:crear-presentacion', ['only' => ['create', 'store']]);
+        $this->middleware('permission:editar-presentacion', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:eliminar-presentacion', ['only' => ['destroy']]);
+        
+    }
     /**
      * Display a listing of the resource.
      */

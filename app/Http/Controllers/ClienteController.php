@@ -10,11 +10,20 @@ use App\Models\Persona;
 use Dom\Document;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use PhpParser\Node\Stmt\TryCatch;
 
-class ClienteController
+class ClienteController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('permission:ver-cliente|crear-cliente|editar-cliente|eliminar-cliente', ['only' => ['index']]);
+        $this->middleware('permission:crear-cliente', ['only' => ['create', 'store']]);
+        $this->middleware('permission:editar-cliente', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:eliminar-cliente', ['only' => ['destroy']]);
+        
+    }
     /**
      * Display a listing of the resource.
      */

@@ -36,16 +36,54 @@
     @endif
 
     <div class="container-fluid px-4">
-        <h1 class="mt-4">Dashboard</h1>
+        <h1 class="mt-4">Panel</h1>
         <ol class="breadcrumb mb-4">
-            <li class="breadcrumb-item active">Dashboard</li>
+            <li class="breadcrumb-item active">Panel</li>
         </ol>
         <div class="row">
+            <!---CLIENTES--->
             <div class="col-xl-3 col-md-6">
                 <div class="card bg-primary text-white mb-4">
-                    <div class="card-body">Primary Card</div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-8">
+                                <i class="fa-solid fa-people-group"></i><span class="m-1">Clientes</span>
+                            </div>
+                            <div class="col-4">
+                                <?php
+                                use App\Models\Cliente;
+                                $clientes = count(Cliente::all());
+                                ?>
+                                <p class="text-center fw-bold fs-4">{{$clientes}}</p>
+                            </div>
+                        </div>
+                    </div>
                     <div class="card-footer d-flex align-items-center justify-content-between">
-                        <a class="small text-white stretched-link" href="#">View Details</a>
+                        <a class="small text-white stretched-link" href="{{route('clientes.index')}}">Ver mas</a>
+                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                    </div>
+                </div>
+            </div>
+
+            <!---CATEGORIAS--->
+            <div class="col-xl-3 col-md-6">
+                <div class="card bg-warning text-white mb-4">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-8">
+                                <i class="fa-solid fa-tag"></i><span class="m-1">Categoría</span>
+                            </div>
+                            <div class="col-4">
+                                <?php
+                                use App\Models\Categoria;
+                                $categorias = count(Categoria::all());
+                                ?>
+                                <p class="text-center fw-bold fs-4">{{$categorias}}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex align-items-center justify-content-between">
+                        <a class="small text-white stretched-link" href="{{route('categorias.index')}}">Ver mas</a>
                         <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                     </div>
                 </div>
@@ -78,7 +116,7 @@
                 </div>
             </div>
         </div>
-        <div class="row">
+        <!---div class="row">
             <div class="col-xl-6">
                 <div class="card mb-4">
                     <div class="card-header">
@@ -586,7 +624,7 @@
                 </table>
             </div>
         </div>
-    </div>
+    </div--->
 
 @endsection
 

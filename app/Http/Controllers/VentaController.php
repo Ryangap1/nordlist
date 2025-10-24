@@ -9,10 +9,19 @@ use App\Models\Producto;
 use App\Models\Venta;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 
-class VentaController
+class VentaController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('permission:ver-venta|crear-venta|mostrar-venta|eliminar-venta', ['only' => ['index']]);
+        $this->middleware('permission:crear-venta', ['only' => ['create', 'store']]);
+        $this->middleware('permission:mostrar-venta', ['only' => ['show']]);
+        $this->middleware('permission:eliminar-venta', ['only' => ['destroy']]);
+        
+    }
     /**
      * Display a listing of the resource.
      */

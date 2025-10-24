@@ -42,11 +42,15 @@
             <li class="breadcrumb-item active">Presentaciones</li>
         </ol>
 
+        @can('ver-presentacion') 
+                            
         <div class="mb-4">
             <a href="{{route('presentaciones.create')}}">
-                <button type="button" class="btn btn-primary">Añadir nuevo registro</button>
+                <button type="button" class="btn btn-primary">Añadir nueva presentación</button>
             </a>
         </div>
+        
+        @endcan
     
         <div class="card mb-4">
             <div class="card-header">
@@ -85,15 +89,24 @@
                                 <td>
                                     <div class="btn-group" role="group" aria-label="Basic mixed styles example">
 
+                                        @can('editar-presentacion')
+                            
                                         <form action="{{route('presentaciones.edit',['presentacion'=>$presentacion])}}" method="GET">
                                             <button type="submit" class="btn btn-warning">Editar</button>
                                         </form>
+                                        
+                                        @endcan
+
+                                        @can('eliminar-presentacion')
+                            
                                         @if ($presentacion->caracteristica->estado == 1)
                                             <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmModal-{{$presentacion->id}}">Desactivar</button>
 
                                         @else
                                             <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#confirmModal-{{$presentacion->id}}">Restaurar</button>
                                         @endif
+                                        
+                                        @endcan
                                         
                                         
                                     </div>

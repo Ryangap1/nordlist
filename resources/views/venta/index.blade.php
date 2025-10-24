@@ -42,11 +42,15 @@
             <li class="breadcrumb-item active">Ventas</li>
         </ol>
 
+        @can('ver-venta')
+                            
         <div class="mb-4">
             <a href="{{route('ventas.create')}}">
-                <button type="button" class="btn btn-primary">Añadir nuevo registro</button>
+                <button type="button" class="btn btn-primary">Añadir nueva venta</button>
             </a>
         </div>
+        
+        @endcan
     
         <div class="card mb-4">
             <div class="card-header">
@@ -91,11 +95,20 @@
                                 <td>
                                     <div class="btn-group" role="group" aria-label="Basic mixed styles example">
 
+                                        @can('mostrar-venta')
+                            
                                         <form action="{{route('ventas.show', ['venta'=> $item])}}" method="GET">
                                             <button type="submit" class="btn btn-success">Ver</button>
                                         </form>
+                                        
+                                        @endcan
 
+                                        @can('eliminar-venta')
+                            
                                         <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmModal-{{$item->id}}">Eliminar</button>
+                                        
+                                        @endcan
+                                        
                                     </div>
                                 </td>
                             </tr>
